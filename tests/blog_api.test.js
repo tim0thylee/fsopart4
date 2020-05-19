@@ -111,6 +111,28 @@ test('blog without url or title propertries returns a 400 bad resquest', async (
         .expect(400)
 })
 
+test('deletion of blog', async () => {
+    const response = await api.get('/api/blogs')
+    const blogToDelete = response.body[0]
+
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+})
+
+test('update the likes of a blog', async () => {
+    const response = await api.get('/api/blogs')
+    const blogToUpdate = response.body[0]
+    const updatedBlog = {
+        ...blogToUpdate,
+        likes: 105
+    }
+    await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(updatedBlog)
+        .expect(200)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
